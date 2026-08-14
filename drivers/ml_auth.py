@@ -7,12 +7,9 @@ Token refresh commits independently of the caller's transaction: if the rest
 of the run later fails and rolls back, we must not lose the freshly rotated
 refresh_token (the old one is now invalid on ML's side).
 """
-import logging
 from datetime import datetime, timedelta, timezone
 
 from drivers.ml_client import BASE_URL, request_with_retry
-
-logger = logging.getLogger(__name__)
 
 EXPIRY_BUFFER = timedelta(minutes=5)
 
@@ -73,13 +70,11 @@ def get_valid_access_token(conn, config) -> str:
 
     if stored is not None:
         access_token, refresh_token, expires_at = stored
-        logger.info("Refresh token usado para logar na API do Mercado Livre: %s", refresh_token)
         if expires_at - EXPIRY_BUFFER > now:
             return access_token
         refresh_token_to_use = refresh_token
     else:
         refresh_token_to_use = config.ml_refresh_token
-        logger.info("Refresh token usado para logar na API do Mercado Livre: %s", refresh_token_to_use)
 
     payload = _refresh(
         config.ml_client_id, config.ml_client_secret, refresh_token_to_use,

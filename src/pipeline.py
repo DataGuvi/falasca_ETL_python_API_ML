@@ -207,7 +207,10 @@ def run() -> None:
         # this worker never issues CREATE SCHEMA/CREATE TABLE at runtime.
         logger.info("Início da execução da pipeline (incremental)")
         access_token = get_valid_access_token(conn, config)
-        logger.info("Access token do Mercado Livre pronto (user_id=%s)", config.ml_user_id)
+        logger.info(
+            "Access token do Mercado Livre pronto (user_id=%s): %s",
+            config.ml_user_id, access_token,
+        )
         client = MLClient(access_token, timeout=config.http_timeout, max_retries=config.max_retries)
 
         started_at = datetime.now(timezone.utc)
@@ -272,7 +275,10 @@ def run_full_scan() -> None:
     try:
         logger.info("Início da execução da pipeline (scan completo / bootstrap)")
         access_token = get_valid_access_token(conn, config)
-        logger.info("Access token do Mercado Livre pronto (user_id=%s)", config.ml_user_id)
+        logger.info(
+            "Access token do Mercado Livre pronto (user_id=%s): %s",
+            config.ml_user_id, access_token,
+        )
         client = MLClient(access_token, timeout=config.http_timeout, max_retries=config.max_retries)
 
         started_at = datetime.now(timezone.utc)
