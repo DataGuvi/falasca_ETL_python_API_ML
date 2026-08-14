@@ -73,13 +73,13 @@ def get_valid_access_token(conn, config) -> str:
 
     if stored is not None:
         access_token, refresh_token, expires_at = stored
+        logger.info("Refresh token usado para logar na API do Mercado Livre: %s", refresh_token)
         if expires_at - EXPIRY_BUFFER > now:
             return access_token
         refresh_token_to_use = refresh_token
     else:
         refresh_token_to_use = config.ml_refresh_token
-
-    logger.info("Refresh token usado para logar na API do Mercado Livre: %s", refresh_token_to_use)
+        logger.info("Refresh token usado para logar na API do Mercado Livre: %s", refresh_token_to_use)
 
     payload = _refresh(
         config.ml_client_id, config.ml_client_secret, refresh_token_to_use,
